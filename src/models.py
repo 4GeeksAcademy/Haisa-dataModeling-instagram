@@ -7,26 +7,64 @@ from eralchemy2 import render_er
 
 Base = declarative_base()
 
-class Person(Base):
-    __tablename__ = 'person'
-    # Here we define columns for the table person
-    # Notice that each column is also a normal Python instance attribute.
+class User(Base):
+    __tablename__ = 'user'
     id = Column(Integer, primary_key=True)
-    name = Column(String(250), nullable=False)
+    username = Column(String(250), nullable=False)
+    first_name =  Column(String(250), nullable=False)
+    last_name = Column(String(250), nullable=False)
+    email = Column(String(250), nullable=False)
+    phone_number = Column(Integer)
+    birth_date = Column(Integer)
+    password = Column(String(250), nullable=False)
 
-class Address(Base):
-    __tablename__ = 'address'
-    # Here we define columns for the table address.
-    # Notice that each column is also a normal Python instance attribute.
+class Followers(Base):
+    __tablename__ = 'followers'
+
+    id = Column(Integer, primary_key= True)
+    user_id =  Column(Integer, ForeignKey('user.id'))
+    user = relationship("User")
+
+
+class Following(Base):
+    __tablename__ = 'following'
+
+    id = Column(Integer, primary_key= True)
+    user_id =  Column(Integer, ForeignKey('user.id'))
+    user = relationship("User")
+
+
+
+
+class Post(Base):
+    __tablename__ = 'post'
+
     id = Column(Integer, primary_key=True)
-    street_name = Column(String(250))
-    street_number = Column(String(250))
-    post_code = Column(String(250), nullable=False)
-    person_id = Column(Integer, ForeignKey('person.id'))
-    person = relationship(Person)
+    user_id = Column(Integer, ForeignKey('user.id'))
+    comments_id = Column(Integer, ForeignKey('comments.id'))
+    comments = relationship("Comments")
+
+
+class Comments(Base):
+    __tablename__ = 'comments'
+
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('user.id'))
+    user = relationship("User")
+    post_id = Column(Integer, ForeignKey('post.id'))
+    post = relationship("Post") 
+
+
 
     def to_dict(self):
         return {}
+
+
+
+
+
+
+
 
 ## Draw from SQLAlchemy base
 try:
